@@ -1,0 +1,223 @@
+<div class="col-12 flex justify-content-between">
+    <h3>Listado de ferencias familiares</h3>
+    <p-button label="Crear origen" severity="success" (click)="handleCreate()"></p-button>
+</div>
+<div class="col-12">
+    <p-table [value]="referencias" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    DNI FAMILIAR
+                </th>
+                <th>
+                    DNI
+                </th>
+                <th>
+                    CODIGO DE VIAJE
+                </th>
+                <th>
+                    NOMBRE
+                </th>
+                <th>
+                    APELLIDO
+                </th>
+                <th>
+                    DIRECCIÓN
+                </th>
+                <th>
+                    TELEFONO
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-referencia let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex + 1 }}
+                </td>
+                <td>
+                    {{ referencia.dni_familiar }}
+                </td>
+                <td>
+                    {{ referencia.dni }}
+                </td>
+                <td>
+                    {{ referencia.codigo_de_viaje }}
+                </td>
+                <td>
+                    {{ referencia.nombre }}
+                </td>
+                <td>
+                    {{ referencia.apellido }}
+                </td>
+                <td>
+                    {{ referencia.direccion }}
+                </td>
+                <td>
+                    {{ referencia.telefono }}
+                </td>
+                <td class="flex gap-2">
+                    <p-button icon="pi pi-eye" severity="secondary" (click)="handleShow(referencia)"></p-button>
+                    <p-button icon="pi pi-pencil" severity="warning" (click)="handleEdit(referencia)"></p-button>
+                    <p-button icon="pi pi-trash" severity="danger"
+                        (click)="confirm($event, referencia.dni_familiar)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-confirmPopup></p-confirmPopup>
+<p-toast></p-toast>
+
+<p-dialog header="Registrando referencia familiar" [modal]="true" [draggable]="false" [(visible)]="displayCreate"
+    [style]="{width: '50vw'}">
+    <form [formGroup]="formCreate">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de referencia</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viajero</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="dni" [options]="viajeros"
+                        optionLabel="nombre" placeholder="Selecciona una opcion" [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Nombre</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="nombre"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Apellido</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="apellido"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Dirección</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="direccion"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Telefono</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="telefono"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-2">
+            <p-button label="Crear" severity="success" (click)="createViaje()"
+                [disabled]="!formCreate.valid"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Editando referencia familiar" [modal]="true" [draggable]="false" [(visible)]="displayEdit"
+    [style]="{width: '50vw'}">
+    <form [formGroup]="formEdit">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de referencia</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viajero</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="dni" [options]="viajeros"
+                        optionLabel="nombre" placeholder="Selecciona una opcion" [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Nombre</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="nombre"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Apellido</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="apellido"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Dirección</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="direccion"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Telefono</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="telefono"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 flex justify-content-center align-items-center gap-2">
+            <p-button label="Editar" severity="warning" styleClass="my-3" (click)="updateViaje()"
+                ></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Detalles de la referencia familiar" [modal]="true" [draggable]="false" [(visible)]="displayShow"
+    [style]="{width: '50vw'}">
+    <form [formGroup]="formShow">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de referencia</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="true"></p-dropdown>
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Selecciona un viajero</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajeros"
+                        optionLabel="nombre" placeholder="Selecciona una opcion" [autoDisplayFirst]="true"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Nombre</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="nombre"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Apellido</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="apellido"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div [style]="{'width': '100%'}">
+                    <label>Dirección</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="direccion"
+                        placeholder="Escribe aqui" />
+                </div>
+                <div [style]="{'width': '100%'}">
+                    <label>Telefono</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="telefono"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+        </div>
+    </form>
+</p-dialog>

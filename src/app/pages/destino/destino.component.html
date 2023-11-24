@@ -1,0 +1,121 @@
+<div class="col-12 flex justify-content-between">
+    <h3>Listado de destinos</h3>
+    <p-button label="Crear destino" severity="success" (click)="handleCreate()"></p-button>
+</div>
+<div class="col-12">
+    <p-table [value]="destinos" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    CODIGO VIAJE
+                </th>
+                <th>
+                    CODIGO DESTINO
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-destino let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex + 1 }}
+                </td>
+                <td>
+                    {{ destino.codigo_de_viaje }}
+                </td>
+                <td>
+                    {{ destino.codigo_destino ? destino.codigo_destino : "Vacio" }}
+                </td>
+                <td class="flex gap-2">
+                    <p-button icon="pi pi-eye" severity="secondary" (click)="handleShow(destino)"></p-button>
+                    <p-button icon="pi pi-pencil" severity="warning" (click)="handleEdit(destino)"></p-button>
+                    <p-button icon="pi pi-trash" severity="danger"
+                        (click)="confirm($event, destino.codigo_de_viaje)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-confirmPopup></p-confirmPopup>
+<p-toast></p-toast>
+
+<p-dialog header="Registrando destino" [modal]="true" [draggable]="false" [(visible)]="displayCreate"
+[style]="{width: '50vw', height: '70vh'}">
+    <form [formGroup]="formCreate">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de destino</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div>
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+                <div>
+                    <label>Ciudad</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_destino" [options]="cities"
+                        optionLabel="name" placeholder="Selecciona una opcion" [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 flex justify-content-center align-items-center gap-2">
+            <p-button label="Crear" severity="success" (click)="createViaje()"
+                [disabled]="!formCreate.valid"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Editando destino" [modal]="true" [draggable]="false" [(visible)]="displayEdit"
+[style]="{width: '50vw', height: '70vh'}">
+    <form [formGroup]="formEdit">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de viaje</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div>
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+                <div>
+                    <label>Ciudad</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_destino" [options]="cities"
+                        optionLabel="name" placeholder="Selecciona una opcion" [autoDisplayFirst]="false"></p-dropdown>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 flex justify-content-center align-items-center gap-2">
+            <p-button label="Editar" severity="warning" styleClass="my-3" (click)="updateViaje()"
+                [disabled]="!formEdit.valid"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Detalles del destino" [modal]="true" [draggable]="false" [(visible)]="displayShow"
+    [style]="{width: '50vw'}">
+    <form [formGroup]="formShow">
+        <div class="surface-hover p-2 my-4">
+            <h3 class="text-cyan-600">Datos de viaje</h3>
+            <div class="col-12 flex justify-content-center align-items-center gap-2">
+                <div>
+                    <label>Selecciona un viaje</label>
+                    <p-dropdown [style]="{'width': '100%'}" formControlName="codigo_de_viaje" [options]="viajes"
+                        optionLabel="codigo_de_viaje" placeholder="Selecciona una opcion"
+                        [autoDisplayFirst]="true"></p-dropdown>
+                </div>
+                <div>
+                    <label>Codigo destino</label>
+                    <input [style]="{'width': '100%'}" type="text" pInputText formControlName="codigo_destino"
+                        placeholder="Escribe aqui" />
+                </div>
+            </div>
+        </div>
+    </form>
+</p-dialog>
